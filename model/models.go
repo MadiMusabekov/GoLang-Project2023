@@ -23,14 +23,14 @@ type Items struct {
 	SellerInfo  string
 }
 type Rating struct {
-	User_ID string
-	Item_ID string
-	Rating  int
+	UserID string
+	ItemID string
+	Rating int
 }
 
 type Comments struct {
-	User_ID string
-	Item_ID string
+	UserID  string
+	ItemID  string
 	Comment string
 }
 type Roles struct {
