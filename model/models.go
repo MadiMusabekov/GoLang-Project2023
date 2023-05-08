@@ -1,11 +1,13 @@
 package model
 
 type User struct {
+	Items       []Items
 	Id          int
 	Username    string
 	Email       string
 	Password    string
 	SocialMedia string
+	Cash        int
 }
 type Admin struct {
 	User
