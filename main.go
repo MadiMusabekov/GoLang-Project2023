@@ -1,6 +1,10 @@
 package main
 
-import Init "GoProject2023/init"
+import (
+	"GoProject2023/controllers"
+	Init "GoProject2023/init"
+	"github.com/gin-gonic/gin"
+)
 
 func init() {
 	Init.LoadEnvVar()
@@ -8,5 +12,7 @@ func init() {
 }
 func main() {
 	r := gin.Default()
-	r.PUT("/items/:id", controller.)
+	r.POST("/users", controllers.UserRegistration)
+	r.GET("/users", controllers.UsersShow)
+	r.Run()
 }

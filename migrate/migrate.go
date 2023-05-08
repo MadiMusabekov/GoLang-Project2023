@@ -1,8 +1,8 @@
-package migrate
+package main
 
 import (
-	Init "Project/GoProject2023/init"
-	"Project/GoProject2023/models"
+	Init "GoProject2023/init"
+	"GoProject2023/models"
 )
 
 func init() {

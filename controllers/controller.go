@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	Init "Project/GoProject2023/init"
-	"Project/GoProject2023/models"
+	Init "GoProject2023/init"
+	"GoProject2023/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,5 +34,12 @@ func UserRegistration(c *gin.Context) {
 	Init.DB.Create(&user)
 	c.JSON(200, gin.H{
 		"user": user,
+	})
+}
+func UsersShow(c *gin.Context) {
+	var users []models.User
+	Init.DB.Find(&users)
+	c.JSON(200, gin.H{
+		"users": users,
 	})
 }

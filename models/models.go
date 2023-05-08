@@ -2,7 +2,7 @@ package models
 
 type User struct {
 	Id          int
-	Items       []Items
+	Items       []Items `gorm:"many2many:user_items;"`
 	Username    string
 	Email       string
 	Password    string
