@@ -1,11 +1,13 @@
-package model
+package models
 
 type User struct {
 	Id          int
+	Items       []Items
 	Username    string
 	Email       string
 	Password    string
 	SocialMedia string
+	Cash        int
 }
 type Admin struct {
 	User
@@ -34,4 +36,10 @@ type Comments struct {
 	Comment string
 }
 type Roles struct {
+}
+
+type Order struct {
+	UserId      string
+	ItemId      string
+	OrderStatus string
 }
