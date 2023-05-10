@@ -36,22 +36,19 @@ func RatingsShow(c *gin.Context) {
 func UserRegistration(c *gin.Context) {
 	var body struct {
 		//ID          uint
-		Items       []models.Item
+
 		Username    string
 		Email       string
 		Password    string
 		SocialMedia string
 		Cash        int
-		Comments    []models.Comment `gorm:"foreignKey:UserID"`
-		Orders      []models.Order   `gorm:"foreignKey:UserID"`
-		Ratings     []models.Rating  `gorm:"foreignKey:UserID"`
 	}
 	c.Bind(&body)
 	user := models.User{
 		//ID: body.ID,
-		Items: body.Items, Username: body.Username,
-		Email: body.Email, Password: body.Password, SocialMedia: body.SocialMedia,
-		Cash: body.Cash, Comments: make([]models.Comment, 0), Orders: make([]models.Order, 0), Ratings: make([]models.Rating, 0),
+		Username: body.Username,
+		Email:    body.Email, Password: body.Password, SocialMedia: body.SocialMedia,
+		Cash: body.Cash,
 	}
 	Init.DB.Create(&user)
 	c.JSON(200, gin.H{
@@ -187,7 +184,7 @@ func ItemCreate(c *gin.Context) {
 		SellerInfo  string
 		//Comments    []models.Comment `gorm:"foreignKey:ItemID;references:ID"`
 		//Orders      []models.Order   `gorm:"foreignKey:ItemID;references:ID"`
-		Ratings []models.Rating `gorm:"foreignKey:ItemID;references:ID"`
+		Ratings uint
 	}
 	c.Bind(&body)
 	item := models.Item{
@@ -197,7 +194,6 @@ func ItemCreate(c *gin.Context) {
 		SellerInfo: body.SellerInfo,
 		//Comments:   body.Comments,
 		//Orders:     body.Orders,
-		Ratings: body.Ratings,
 	}
 	//Init.DB.Create(&item)
 	if err := Init.DB.Create(&item).Error; err != nil {

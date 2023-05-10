@@ -14,15 +14,12 @@ func main() {
 	r := gin.Default()
 	r.POST("/users", controllers.UserRegistration).
 		GET("/users", controllers.UsersShow)
-
-	r.GET("/items", controllers.ItemsShow).
-		POST("/items", controllers.ItemCreate)
-
 	r.POST("/ratings", controllers.RateItem).
 		GET("/ratings", controllers.RatingsShow)
-
 	r.GET("/comments", controllers.CommentsShow).
 		POST("/comments", controllers.AddComment)
-
+	r.GET("/items", controllers.ItemsShow).
+		POST("/items", controllers.ItemCreate)
 	r.Run()
+	//POST("/items", controllers.ItemCreate)
 }

@@ -10,11 +10,13 @@ func init() {
 	Init.LoadEnvVar()
 }
 func main() {
-	Init.DB.AutoMigrate(&models.Item{})
-	Init.DB.AutoMigrate(&models.User{})
-	Init.DB.AutoMigrate(&models.Comment{})
-	Init.DB.AutoMigrate(&models.Rating{})
-	Init.DB.AutoMigrate(&models.Client{})
-	Init.DB.AutoMigrate(&models.Admin{})
-	Init.DB.AutoMigrate(&models.Roles{})
+	Init.DB.AutoMigrate(&models.User{}, &models.Item{}, &models.Order{}, &models.Comment{}, &models.Rating{})
+	Init.DB.AutoMigrate(&models.Item{}, &models.Order{}, &models.Rating{})
+
+	//Init.DB.AutoMigrate(&models.Comment{})
+	//Init.DB.AutoMigrate(&models.Order{})
+	//Init.DB.AutoMigrate(&models.Rating{})
+	//Init.DB.AutoMigrate(&models.Client{})
+	//Init.DB.AutoMigrate(&models.Admin{})
+	//Init.DB.AutoMigrate(&models.Roles{})
 }

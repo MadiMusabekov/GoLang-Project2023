@@ -4,58 +4,52 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	//ID          uint   `gorm:"PrimaryKey"`
-	Items       []Item `gorm:"foreignKey:UserID; references:ID"`
+	Items       []Item `gorm:"foreignKey:UserID"`
 	Username    string
 	Email       string
 	Password    string
 	SocialMedia string
 	Cash        int
-	Comments    []Comment `gorm:"foreignKey:UserID;references:ID"`
-	Orders      []Order   `gorm:"foreignKey:UserID;references:ID"`
-	Ratings     []Rating  `gorm:"foreignKey:UserID;references:ID"`
-}
-type Admin struct {
-	User
-}
-type Client struct {
-	User
+	Comments    []Comment `gorm:"foreignKey:UserID"`
+	Orders      []Order   `gorm:"foreignKey:UserID"`
+	Ratings     []Rating  `gorm:"foreignKey:UserID"`
 }
 
 type Item struct {
 	gorm.Model
-	//ID          uint `gorm:"PrimaryKey"`
-	UserID      User `gorm:"foreignKey: ID"`
+	UserID      uint // foreign key reference
+	User        User `gorm:"foreignKey:UserID"`
 	Name        string
 	Description string
 	Price       int
 	Rating      float64
 	SellerInfo  string
-	Ratings     []Rating `gorm:"foreignKey:ItemID;references:ID"`
+	Ratings     []Rating `gorm:"foreignKey:ItemID"`
 }
+
 type Rating struct {
 	gorm.Model
-	UserID User `gorm:"foreignKey:ID"`
-	ItemID Item `gorm:"foreignKey: ID"`
+	UserID uint // foreign key reference
+	User   User `gorm:"foreignKey:UserID"`
+	ItemID uint // foreign key reference
+	Item   Item `gorm:"foreignKey:ItemID"`
 	Rating float64
 }
 
 type Comment struct {
-	//ID uint `gorm:"primary_key"`
 	gorm.Model
-	//ID      uint `gorm:"PrimaryKey"`
-	UserID  User `gorm:"foreignKey: ID"`
-	ItemID  Item `gorm:"foreignKey: ID"`
+	UserID  uint // foreign key reference
+	User    User `gorm:"foreignKey:UserID"`
+	ItemID  uint // foreign key reference
+	Item    Item `gorm:"foreignKey:ItemID"`
 	Comment string
-}
-type Roles struct {
 }
 
 type Order struct {
-	//ID uint `gorm:"primary_key"`
 	gorm.Model
-	//ID          uint `gorm:"PrimaryKey"`
-	UserID      User `gorm:"foreignKey: ID"`
-	ItemID      Item `gorm:"foreignKey: ID"`
+	UserID      uint // foreign key reference
+	User        User `gorm:"foreignKey:UserID"`
+	ItemID      uint // foreign key reference
+	Item        Item `gorm:"foreignKey:ItemID"`
 	OrderStatus string
 }
