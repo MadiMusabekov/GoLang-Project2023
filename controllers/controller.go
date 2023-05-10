@@ -3,13 +3,15 @@ package controllers
 import (
 	Init "GoProject2023/init"
 	"GoProject2023/models"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func ItemsShow(c *gin.Context) {
 	var items []models.Item
-	Init.DB.Find(&items)
+	//Init.DB.Find(&items)
+	Init.DB.Preload("Ratings").Find(&items)
 
 	c.JSON(200, gin.H{
 		"items": items,
@@ -98,7 +100,7 @@ func AddComment(c *gin.Context) {
 		ItemID:  body.ItemID,
 		Comment: body.Comment,
 	}
-	Init.DB.Create(&comment)
+	//Init.DB.Create(&comment)
 
 	//old version
 	//var user models.User
@@ -117,7 +119,7 @@ func AddComment(c *gin.Context) {
 	var item models.Item
 	Init.DB.First(&item, body.ItemID)
 	Init.DB.Model(&item).Association("Comments").Append(&comment)
-
+	//Init.DB.Model(&item).Update("Comment")
 	c.JSON(200, gin.H{
 		"message": "Commented successfully",
 	})
@@ -127,7 +129,7 @@ func RateItem(c *gin.Context) {
 	var body struct {
 		UserID uint
 		ItemID uint
-		Rating float64
+		Rating int
 	}
 
 	c.Bind(&body)
@@ -153,19 +155,20 @@ func RateItem(c *gin.Context) {
 	Init.DB.Model(&user).Association("Ratings").Append(&newRating)
 	Init.DB.Save(&user)
 
-	var previousRatings []float64
-	var ratings []float64
-	Init.DB.Where("item_id = ?", body.ItemID).Pluck("rating", &ratings)
-
+	var ratings []int
+	//Init.DB.Where("item_id = ?", newRating.ItemID).Pluck("rating", &ratings)
+	Init.DB.Model(&models.Rating{}).Select("rating").Where("item_id = ?", newRating.ItemID).Find(&ratings)
+	fmt.Println(len(ratings))
 	// here we are iterating through an array
 	//consisting of rating column, so that we can apply
 	// an average rating to an item during each rating
-	sum := 0.0
+	sum := 0
+	avgRating := 0
+
 	for _, r := range ratings {
 		sum += r
 	}
-	avgRating := sum / float64(len(previousRatings))
-
+	avgRating = sum / len(ratings)
 	Init.DB.Model(&item).Update("Rating", avgRating)
 
 	// Return a success message
@@ -180,7 +183,7 @@ func ItemCreate(c *gin.Context) {
 		Name        string
 		Description string
 		Price       int
-		Rating      float64
+		Rating      int
 		SellerInfo  string
 		//Comments    []models.Comment `gorm:"foreignKey:ItemID;references:ID"`
 		//Orders      []models.Order   `gorm:"foreignKey:ItemID;references:ID"`

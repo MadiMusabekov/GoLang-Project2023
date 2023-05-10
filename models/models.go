@@ -1,6 +1,8 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type User struct {
 	gorm.Model
@@ -23,7 +25,7 @@ type Item struct {
 	Name        string
 	Description string
 	Price       int
-	Rating      float64
+	Rating      int
 	Comment     string
 	SellerInfo  string
 	Ratings     []Rating `gorm:"foreignKey:ItemID"`
@@ -35,7 +37,7 @@ type Rating struct {
 	User   User `gorm:"foreignKey:UserID"`
 	ItemID uint // foreign key reference
 	Item   Item `gorm:"foreignKey:ItemID"`
-	Rating float64
+	Rating int
 }
 
 type Comment struct {
