@@ -4,12 +4,13 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Items       []Item `gorm:"foreignKey:UserID"`
+
 	Username    string
 	Email       string
 	Password    string
 	SocialMedia string
 	Cash        int
+	Items       []Item    `gorm:"foreignKey:UserID"`
 	Comments    []Comment `gorm:"foreignKey:UserID"`
 	Orders      []Order   `gorm:"foreignKey:UserID"`
 	Ratings     []Rating  `gorm:"foreignKey:UserID"`
@@ -23,6 +24,7 @@ type Item struct {
 	Description string
 	Price       int
 	Rating      float64
+	Comment     string
 	SellerInfo  string
 	Ratings     []Rating `gorm:"foreignKey:ItemID"`
 }
@@ -51,5 +53,5 @@ type Order struct {
 	User        User `gorm:"foreignKey:UserID"`
 	ItemID      uint // foreign key reference
 	Item        Item `gorm:"foreignKey:ItemID"`
-	OrderStatus string
+	OrderStatus bool
 }
