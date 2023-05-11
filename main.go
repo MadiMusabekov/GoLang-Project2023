@@ -13,7 +13,8 @@ func init() {
 func main() {
 	r := gin.Default()
 	r.POST("/users", controllers.UserRegistration).
-		GET("/users", controllers.UsersShow)
+		GET("/users", controllers.UsersShow).
+		PUT("/users", controllers.DepositCash)
 	r.POST("/ratings", controllers.RateItem).
 		GET("/ratings", controllers.RatingsShow)
 	r.GET("/comments", controllers.CommentsShow).

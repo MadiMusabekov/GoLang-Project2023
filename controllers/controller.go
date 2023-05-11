@@ -256,3 +256,17 @@ func PurchaseItem(c *gin.Context) {
 		"message": "Commented successfully",
 	})
 }
+
+func DepositCash(c *gin.Context) {
+	var body struct {
+		ID   uint
+		Cash int
+	}
+	c.Bind(&body)
+	var user models.User
+	Init.DB.First(&user, body.ID)
+	Init.DB.Model(&user).Update("cash", user.Cash+body.Cash)
+	c.JSON(200, gin.H{
+		"message": "Cash deposited successfully",
+	})
+}
