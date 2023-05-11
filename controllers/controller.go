@@ -9,7 +9,7 @@ import (
 
 func ItemsShow(c *gin.Context) {
 	var items []models.Item
-	Init.DB.Find(&items)
+	Init.DB.Preload("Comments").Preload("Orders").Preload("Ratings").Find(&items)
 
 	c.JSON(200, gin.H{
 		"items": items,
@@ -30,6 +30,15 @@ func RatingsShow(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"ratings": ratings,
+	})
+}
+
+func OrdersShow(c *gin.Context) {
+	var orders []models.Order
+	Init.DB.Find(&orders)
+
+	c.JSON(200, gin.H{
+		"orders": orders,
 	})
 }
 
@@ -57,7 +66,7 @@ func UserRegistration(c *gin.Context) {
 }
 func UsersShow(c *gin.Context) {
 	var users []models.User
-	Init.DB.Preload("Comments").Find(&users)
+	Init.DB.Preload("Items").Preload("Comments").Preload("Orders").Preload("Ratings").Find(&users)
 	c.JSON(200, gin.H{
 		"users": users,
 	})
@@ -109,6 +118,8 @@ func AddComment(c *gin.Context) {
 	Init.DB.First(&user, body.UserID)
 	Init.DB.Model(&user).Association("Comments").Append(&comment)
 
+	var users []models.User
+	Init.DB.Preload("Comments").Find(&users)
 	//old ver
 	//var item models.Item
 	//Init.DB.Model(&models.Item{}).Where("id = ?", body.ItemID).Association("Comments").Append(&comment)
@@ -161,12 +172,16 @@ func RateItem(c *gin.Context) {
 	//consisting of rating column, so that we can apply
 	// an average rating to an item during each rating
 	sum := 0.0
-	for _, r := range ratings {
-		sum += r
+	avgRating := 0.0
+	if len(ratings) > 0 {
+		for _, r := range ratings {
+			sum += r
+		}
+		avgRating = sum / float64(len(previousRatings))
+		Init.DB.Model(&item).Update("Rating", avgRating)
+	} else {
+		Init.DB.Model(&item).Update("Rating", 0)
 	}
-	avgRating := sum / float64(len(previousRatings))
-
-	Init.DB.Model(&item).Update("Rating", avgRating)
 
 	// Return a success message
 	c.JSON(200, gin.H{
@@ -204,5 +219,40 @@ func ItemCreate(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"item": item,
+	})
+}
+
+func PurchaseItem(c *gin.Context) {
+	var body struct {
+		UserID      uint
+		ItemID      uint
+		OrderStatus bool
+	}
+	c.Bind(&body)
+	order := models.Order{
+		UserID:      body.UserID,
+		ItemID:      body.ItemID,
+		OrderStatus: body.OrderStatus,
+	}
+
+	//new version
+	var user models.User
+	Init.DB.First(&user, body.UserID)
+
+	var item models.Item
+	Init.DB.First(&item, body.ItemID)
+
+	Init.DB.Model(&user).Association("Orders").Append(&order)
+	Init.DB.Save(&user)
+	Init.DB.Model(&item).Association("Orders").Append(&order)
+	Init.DB.Save(&item)
+
+	//Init.DB.Create(&order)
+
+	Init.DB.Model(&user).Update("cash", user.Cash-item.Price)
+	//new ver
+	//Init.DB.Model(&item).Update("Comment")
+	c.JSON(200, gin.H{
+		"message": "Commented successfully",
 	})
 }

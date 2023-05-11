@@ -18,40 +18,42 @@ type User struct {
 
 type Item struct {
 	gorm.Model
-	UserID      uint // foreign key reference
-	User        User `gorm:"foreignKey:UserID"`
+	UserID uint // foreign key reference
+	//User        User `gorm:"foreignKey:UserID"`
 	Name        string
 	Description string
 	Price       int
 	Rating      float64
 	Comment     string
 	SellerInfo  string
-	Ratings     []Rating `gorm:"foreignKey:ItemID"`
+	Comments    []Comment `gorm:"foreignKey:ItemID"`
+	Orders      []Order   `gorm:"foreignKey:ItemID"`
+	Ratings     []Rating  `gorm:"foreignKey:ItemID"`
 }
 
 type Rating struct {
 	gorm.Model
 	UserID uint // foreign key reference
-	User   User `gorm:"foreignKey:UserID"`
+	//User   User `gorm:"foreignKey:UserID"`
 	ItemID uint // foreign key reference
-	Item   Item `gorm:"foreignKey:ItemID"`
+	//Item   Item `gorm:"foreignKey:ItemID"`
 	Rating float64
 }
 
 type Comment struct {
 	gorm.Model
-	UserID  uint // foreign key reference
-	User    User `gorm:"foreignKey:UserID"`
-	ItemID  uint // foreign key reference
-	Item    Item `gorm:"foreignKey:ItemID"`
+	UserID uint // foreign key reference
+	//User    User `gorm:"foreignKey:UserID"`
+	ItemID uint // foreign key reference
+	//Item    Item `gorm:"foreignKey:ItemID"`
 	Comment string
 }
 
 type Order struct {
 	gorm.Model
-	UserID      uint // foreign key reference
-	User        User `gorm:"foreignKey:UserID"`
-	ItemID      uint // foreign key reference
-	Item        Item `gorm:"foreignKey:ItemID"`
+	UserID uint // foreign key reference
+	//User        User `gorm:"foreignKey:UserID"`
+	ItemID uint // foreign key reference
+	//Item        Item `gorm:"foreignKey:ItemID"`
 	OrderStatus bool
 }

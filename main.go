@@ -20,6 +20,8 @@ func main() {
 		POST("/comments", controllers.AddComment)
 	r.GET("/items", controllers.ItemsShow).
 		POST("/items", controllers.ItemCreate)
+	r.GET("/orders", controllers.OrdersShow).
+		POST("/orders", controllers.PurchaseItem)
 	r.Run()
 	//POST("/items", controllers.ItemCreate)
 }
